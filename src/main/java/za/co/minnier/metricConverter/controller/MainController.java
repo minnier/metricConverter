@@ -1,5 +1,6 @@
 package za.co.minnier.metricConverter.controller;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,8 @@ import za.co.minnier.metricConverter.model.ConversionTypes;
 public class MainController {
 
 	public static final Logger logger = LoggerFactory.getLogger(MainController.class);
+	
+	DecimalFormat newFormat = new DecimalFormat("#.#####");
 	
 	private static final double METER_TO_FEET_FACTOR = 3.28084;
 	private static final double CENTIMETER_TO_INCH_FACTOR = 0.393701;
@@ -53,6 +56,7 @@ public class MainController {
 		result.add(new ConversionTypes("length", "KILOMETERS TO YARDS", "kilometers", "yards"));
 		
 		result.add(new ConversionTypes("mass", "KILOGRAMS TO POUNDS", "kilograms", "pounds"));
+		result.add(new ConversionTypes("mass", "POUNDS TO KILOGRAMS", "pounds", "kilograms"));
 
 		result.add(new ConversionTypes("temperature", "CELSIUS TO FAHRENHEIT", "celsius", "fahrenheit"));
 		result.add(new ConversionTypes("temperature", "FAHRENHEIT TO CELSIUS", "fahrenheit", "celsius"));
@@ -83,8 +87,15 @@ public class MainController {
 	@RequestMapping("/api/convert/mass/{value}")
 	public ResponseEntity<Double> convertMass(@PathVariable Double value, @PathParam("from") String from, @PathParam("to") String to) {
 		try {
+			Double result;
 			if( KILOGRAMS.equals(from) && POUNDS.equals(to) ) {
-				return new ResponseEntity<>(value * KILOGRAMS_TO_POUNDS_FACTOR, HttpStatus.OK);
+				result = Double.valueOf(newFormat.format(value * KILOGRAMS_TO_POUNDS_FACTOR));
+				return new ResponseEntity<>(result, HttpStatus.OK);
+			}
+			
+			if( POUNDS.equals(from) && KILOGRAMS.equals(to) ) {
+				result = Double.valueOf(newFormat.format(value / KILOGRAMS_TO_POUNDS_FACTOR));
+				return new ResponseEntity<>(result, HttpStatus.OK);
 			}
 			
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

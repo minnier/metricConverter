@@ -32,6 +32,7 @@ public class MainControllerTest {
 				+ "{'category':'length','name':'CENTIMETERS TO INCHES','from':'centimeters','to':'inches'},"
 				+ "{'category':'length','name':'KILOMETERS TO YARDS','from':'kilometers','to':'yards'},"
 				+ "{'category':'mass','name':'KILOGRAMS TO POUNDS','from':'kilograms','to':'pounds'},"
+				+ "{'category':'mass','name':'POUNDS TO KILOGRAMS','from':'pounds','to':'kilograms'},"
 				+ "{'category':'temperature','name':'CELSIUS TO FAHRENHEIT','from':'celsius','to':'fahrenheit'},"
 				+ "{'category':'temperature','name':'FAHRENHEIT TO CELSIUS','from':'fahrenheit','to':'celsius'}]";
 
@@ -94,6 +95,21 @@ public class MainControllerTest {
 
 		System.out.println(result.getResponse());
 		String expected = "2.20462";
+
+		JSONAssert.assertEquals(expected, result.getResponse()
+				.getContentAsString(), false);
+	}
+
+	@Test
+	public void getPoundsToKilograms() throws Exception {
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
+				"/api/convert/mass/1?from=pounds&to=kilograms").accept(
+				MediaType.APPLICATION_JSON);
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		System.out.println(result.getResponse());
+		String expected = "0.45359";
 
 		JSONAssert.assertEquals(expected, result.getResponse()
 				.getContentAsString(), false);
