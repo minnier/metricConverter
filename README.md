@@ -1,1 +1,3 @@
 # metricConverter 
+
+Author: Riaan Minnie
